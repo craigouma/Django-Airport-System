@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Staff Report Generation{% endblock %}
+{% block body %}
+    <h3>Staff</h3>
+    <table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Flight No.</th>
+      <th scope="col">PNR</th>
+      <th scope="col">Name</th>
+      <th scope="col">Date of Birth</th>
+      <th scope="col">Nationality</th>
+      <th scope="col">Gender</th>
+      <th scope="col">Checked In Status</th>
+      <th scope="col">Cleared Security Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for passenger in passengers %}
+        <tr>
+          <td>{{ passenger.flight_no.flight_no}}</td>
+          <td>{{ passenger.pnr}}</td>
+          <td>{{ passenger.first_name}} {{ passenger.last_name}}</td>
+          <td>{{ passenger.dob}}</td>
+          <td>{{ passenger.nationality}}</td>
+          <td>{{ passenger.gender}}</td>
+          <td>
+            {% if passenger.checked_in_status == 0 %}
+                <a href="{% url 'staff_check_in' passenger.pk%}" class="btn btn-outline-danger" role="button">Check In</a>
+            {% else %}
+                <button type="button" class="btn btn-success disabled">Checked In</button>
+            {% endif %}
+          </td>
+          <td>{{ passenger.cleared_security_status}}</td>
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{% url 'generate_report' flight_no %}" class="btn btn-outline-success" role="button">Generate Flight Report</a>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">CLEAR FLIGHT FOR TAKE OFF</button>
+
+  <!-- Modal -->
+  <div class="modal" id="myModal" role="dialog">
+	  <div class="modal-dialog" role="document">
+
+	    <div class="modal-content">
+	      <div class="modal-header">
+		    <h5 class="modal-title">Confirmation</h5>
+		    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		        <span aria-hidden="true">&times;</span>
+		    </button>
+	      </div>
+	      <div class="modal-body">
+		    <p>Are you sure you want to clear flight for take off?</p>
+	      </div>
+	      <div class="modal-footer">
+            <a href="{% url 'delete_passengers' flight_no %}" class="btn btn-danger" role="button">Yes, clear</a>
+{#		    <button type="button" class="btn btn-danger">Yes, clear</button>#}
+		    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+
+	  </div>
+  </div>
+
+{% endblock %}
